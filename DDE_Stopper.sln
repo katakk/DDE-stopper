@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DDE_Stopper", "DDE_Stopper.vcproj", "{FDBF7F1E-1D91-4AE0-93E9-7DEC166FF711}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DDE_StopperDll", "DDE_StopperDll.vcproj", "{F72BB6AE-C03F-4241-AE7E-C90FFF8D38C1}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{FDBF7F1E-1D91-4AE0-93E9-7DEC166FF711}.Debug.ActiveCfg = Debug|Win32
+		{FDBF7F1E-1D91-4AE0-93E9-7DEC166FF711}.Debug.Build.0 = Debug|Win32
+		{FDBF7F1E-1D91-4AE0-93E9-7DEC166FF711}.Release.ActiveCfg = Release|Win32
+		{FDBF7F1E-1D91-4AE0-93E9-7DEC166FF711}.Release.Build.0 = Release|Win32
+		{F72BB6AE-C03F-4241-AE7E-C90FFF8D38C1}.Debug.ActiveCfg = Debug|Win32
+		{F72BB6AE-C03F-4241-AE7E-C90FFF8D38C1}.Debug.Build.0 = Debug|Win32
+		{F72BB6AE-C03F-4241-AE7E-C90FFF8D38C1}.Release.ActiveCfg = Release|Win32
+		{F72BB6AE-C03F-4241-AE7E-C90FFF8D38C1}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal

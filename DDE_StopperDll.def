@@ -1,0 +1,11 @@
+; KeyboardHookDll.def : DLL のモジュール パラメータを宣言します。
+
+LIBRARY      "DDE_StopperDll"
+
+SECTIONS
+    .HookData    READ WRITE SHARED
+
+EXPORTS
+    ; 明示的なエクスポートはここへ記述できます
+    SetHook
+    UnHook
