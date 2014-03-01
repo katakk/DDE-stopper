@@ -87,4 +87,6 @@ void CDDE_StopperDlg::OnSize(UINT nType, int cx, int cy)
 	{
 		GetDlgItem(IDC_EDITLOG)->MoveWindow(0,0,cx,cy);
 	}
+	// “K“–‚¾‚¯‚ÇÁ‚¦‚éƒ‚[ƒh
+	if(nType == SIZE_MINIMIZED) ShowWindow(SW_HIDE);
 }
