@@ -8,3 +8,9 @@ DDEInitiate("IExplore", "WWW_OpenURL") とかしてるゴミアプリがいる�
 
 とてもとてもうざいのでグローバルフックして、WM_DDE_ACKを適当に投げることにした。
 
+     LRESULT CALLBACK HookProc(int nCode, WPARAM wParam, LPARAM lParam)
+     {
+         if( pMsg->message == WM_DDE_INITIATE )  {
+              SendMessage(hwndDDESender, WM_DDE_ACK, (WPARAM)hwndDDEReceiver, 0);   
+     
+     
