@@ -47,18 +47,34 @@ void AddLog(LPCTSTR str)
     SendMessage(ghWnd, EM_REPLACESEL, (WPARAM)0, (LPARAM)(LPCTSTR)str);
 }
 
+HWND GetParentOwner(HWND hWnd)
+{
+	// check for permanent-owned window first
+	CWnd* pWnd = CWnd::FromHandlePermanent(hWnd);
+	if (pWnd != NULL)
+		return pWnd->GetOwner()->GetSafeHwnd();
+
+	// otherwise, return parent in the Windows sense
+	return (::GetWindowLong(hWnd, GWL_STYLE) & WS_CHILD) ?
+		::GetParent(hWnd) : ::GetWindow(hWnd, GW_OWNER);
+}
+
 LRESULT CALLBACK HookProc(int nCode, WPARAM wParam, LPARAM lParam)
 {
     CString str;
     LPCWPSTRUCT pMsg = (LPCWPSTRUCT) lParam;
     TCHAR szDDEReceiver[MAX_PATH];
+    TCHAR szDDESender[MAX_PATH];
     TCHAR szApp[MAX_PATH];
     TCHAR szTopic[MAX_PATH];
 
     HWND hwndDDEReceiver;
     HWND hwndDDESender;
+    HWND htopDDEReceiver;
+    HWND htopDDESender;
     static DWORD _pid;
     DWORD pid;
+	int logging = 1;
 
     /* NO DDE ? throw */
     if(!( pMsg->message >= WM_DDE_FIRST &&
@@ -69,6 +85,10 @@ LRESULT CALLBACK HookProc(int nCode, WPARAM wParam, LPARAM lParam)
 
     hwndDDEReceiver = (HWND)pMsg->hwnd;
     hwndDDESender = (HWND)pMsg->wParam;
+
+	htopDDEReceiver = GetParentOwner(hwndDDEReceiver);
+	htopDDESender = GetParentOwner(hwndDDESender);
+
     GetWindowThreadProcessId( hwndDDESender, &pid);
 
     if( pMsg->message == WM_DDE_INITIATE )
@@ -79,20 +99,33 @@ LRESULT CALLBACK HookProc(int nCode, WPARAM wParam, LPARAM lParam)
         GlobalGetAtomName(HIWORD(pMsg->lParam), szTopic,
             sizeof(szTopic) / sizeof(TCHAR));
 
-/*
-        if(GetWindowText(hwndDDEReceiver, szDDEReceiver,
+        if(GetWindowText(htopDDEReceiver, szDDEReceiver,
             sizeof(szDDEReceiver) / sizeof(TCHAR)) == 0)
         {
+			logging = 0;
             _stprintf(szDDEReceiver, _T("[%08p]"), hwndDDEReceiver);
         }
+		szDDEReceiver[31] = _T('\0');
 
-        str.Format(_T("PID:%4d %-8s "),
-            pid, sDDE[pMsg->message - WM_DDE_FIRST]);
+		if(GetWindowText(htopDDESender, szDDESender,
+            sizeof(szDDESender) / sizeof(TCHAR)) == 0)
+        {
+//			logging = 0;
+            _stprintf(szDDESender, _T("[%08p]"), hwndDDESender);
+        }
+
+		if( logging )
+		{
+        str.Format(_T("PID:%4d %-8s (%-32s %-32s [%s][%s])\n"),
+            pid,
+			sDDE[pMsg->message - WM_DDE_FIRST],
+            szDDEReceiver,
+			szDDESender,
+			szApp,
+			szTopic
+			);
         AddLog(str);
-        str.Format(_T("(%-32s [%s][%s])\n"),
-            szDDEReceiver, szApp, szTopic);
-        AddLog(str);
-*/
+		}
 
         // DDEInitiate("IExplore", "WWW_OpenURL")
         if (
