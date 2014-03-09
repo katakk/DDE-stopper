@@ -4,6 +4,7 @@
 //
 #define IDR_MAINFRAME                   2
 #define IDD_DDE_Stopper_DIALOG          3
+#define IDR_MAINFRAME1                  3
 #define IDC_BUTTON1                     4
 #define IDC_EDITLOG                     3001
 

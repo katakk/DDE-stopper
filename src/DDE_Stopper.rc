@@ -81,6 +81,7 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "DDE_Stopper.ico"
+IDR_MAINFRAME1          ICON                    "idr_main.ico"
 #endif    // “ú–{Œê resources
 /////////////////////////////////////////////////////////////////////////////
 

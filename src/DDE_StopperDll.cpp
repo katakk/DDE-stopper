@@ -29,22 +29,16 @@ CDDE_StopperDllApp::CDDE_StopperDllApp()
 
 // 唯一の CDDE_StopperDllApp オブジェクトです。
 CDDE_StopperDllApp theApp;
+UINT WM_ADDLOG    = (WM_USER + 1004);
 
 // CDDE_StopperDllApp 初期化
 BOOL CDDE_StopperDllApp::InitInstance()
 {
     CWinApp::InitInstance();
     gInstance = m_hInstance;
-    return TRUE;
-}
 
-void AddLog(LPCTSTR str)
-{
-    SendMessage(ghWnd,
-        EM_SETSEL,
-        SendMessage(ghWnd, WM_GETTEXTLENGTH, 0, 0),
-        -1);
-    SendMessage(ghWnd, EM_REPLACESEL, (WPARAM)0, (LPARAM)(LPCTSTR)str);
+	WM_ADDLOG = RegisterWindowMessage(TEXT("DDEStopperAddLog"));
+    return TRUE;
 }
 
 HWND GetParentOwner(HWND hWnd)
@@ -102,30 +96,24 @@ LRESULT CALLBACK HookProc(int nCode, WPARAM wParam, LPARAM lParam)
         if(GetWindowText(htopDDEReceiver, szDDEReceiver,
             sizeof(szDDEReceiver) / sizeof(TCHAR)) == 0)
         {
-			logging = 0;
             _stprintf(szDDEReceiver, _T("[%08p]"), hwndDDEReceiver);
         }
-		szDDEReceiver[31] = _T('\0');
+		szDDEReceiver[9] = _T('\0');
 
 		if(GetWindowText(htopDDESender, szDDESender,
             sizeof(szDDESender) / sizeof(TCHAR)) == 0)
         {
-//			logging = 0;
             _stprintf(szDDESender, _T("[%08p]"), hwndDDESender);
         }
+		szDDESender[9] = _T('\0');
 
-		if( logging )
-		{
-        str.Format(_T("PID:%4d %-8s (%-32s %-32s [%s][%s])\n"),
-            pid,
-			sDDE[pMsg->message - WM_DDE_FIRST],
-            szDDEReceiver,
-			szDDESender,
-			szApp,
-			szTopic
-			);
-        AddLog(str);
-		}
+			str.Format(_T("%4d %-10s %-10s\n"),
+				pid,
+				szApp,
+				szDDEReceiver
+				);
+			//OnAddLog
+			::SendMessage(ghWnd, WM_ADDLOG, 0, (LPARAM)(LPCTSTR)str);
 
         // DDEInitiate("IExplore", "WWW_OpenURL")
         if (
@@ -133,7 +121,7 @@ LRESULT CALLBACK HookProc(int nCode, WPARAM wParam, LPARAM lParam)
             _tcscmp(szTopic, _T("WWW_OpenURL") ) == 0)
         {
             /* send dummy ACK (not post) */
-            SendMessage(hwndDDESender, WM_DDE_ACK, (WPARAM)hwndDDEReceiver, 0);
+			::SendMessage(hwndDDESender, WM_DDE_ACK, (WPARAM)hwndDDEReceiver, 0);
         }
 
     }
